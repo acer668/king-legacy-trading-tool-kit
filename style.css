@@ -299,6 +299,34 @@ select, select option {
   display: none;
 }
 
+
+.robux-ratio-disclaimer {
+  position: fixed;
+  left: 18px;
+  top: 136px;
+  width: 270px;
+  z-index: 3;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #e8f2ff;
+  background: rgba(8, 17, 31, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 12px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.robux-ratio-disclaimer strong {
+  color: var(--accent-2);
+}
+
+body.light .robux-ratio-disclaimer {
+  color: #173452;
+  background: rgba(244, 248, 255, 0.88);
+}
+
 .robux-intro,
 .robux-items-container {
   background: rgba(17, 30, 51, 0.82);
@@ -419,6 +447,14 @@ select, select option {
 
 body.light .robux-disclaimer {
   background: rgba(244, 248, 255, 0.9);
+}
+
+@media (max-width: 1500px) {
+  .robux-ratio-disclaimer {
+    position: static;
+    margin: 18px auto 14px;
+    width: min(1200px, calc(100% - 40px));
+  }
 }
 
 @media (max-width: 980px) {

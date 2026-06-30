@@ -256,6 +256,8 @@ const els = {
   calculatorView: document.getElementById("calculatorView"),
   robuxView: document.getElementById("robuxView"),
   robuxItemsContainer: document.getElementById("robuxItemsContainer"),
+  siteTitle: document.getElementById("siteTitle"),
+  siteSubtitle: document.getElementById("siteSubtitle"),
   conquerorPriceInput: document.getElementById("conquerorPriceInput"),
   regionalGoBtn: document.getElementById("regionalGoBtn"),
   regionalResetBtn: document.getElementById("regionalResetBtn"),
@@ -486,7 +488,7 @@ function renderRobuxItems() {
   categoryOrder.forEach(category => {
     const categoryItems = ROBUX_ITEMS
       .filter(item => item.category === category)
-      .sort((a, b) => (b.maxRobux / b.finValue) - (a.maxRobux / a.finValue));
+      .sort((a, b) => (a.maxRobux / a.finValue) - (b.maxRobux / b.finValue));
 
     if (!categoryItems.length) return;
 
@@ -529,12 +531,18 @@ function showCalculatorView() {
   els.calculatorView.classList.remove("hidden-view");
   els.robuxView.classList.add("hidden-view");
   els.pageToggleBtn.textContent = "Robux Per Fin Values";
+  els.siteTitle.textContent = "King Legacy Trade Calculator";
+  els.siteSubtitle.textContent = "Compare both sides of a trade using custom Fin values.";
+  document.title = "King Legacy Trade Calculator";
 }
 
 function showRobuxView() {
   els.calculatorView.classList.add("hidden-view");
   els.robuxView.classList.remove("hidden-view");
   els.pageToggleBtn.textContent = "Trade Calculator";
+  els.siteTitle.textContent = "King Legacy Robux Per Fin Calculator";
+  els.siteSubtitle.textContent = "Calculates the amount of Robux required to obtain 1 Fin through trading.";
+  document.title = "King Legacy Robux Per Fin Calculator";
   renderRobuxItems();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
