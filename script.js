@@ -272,6 +272,9 @@ const FEEDBACK_WEBHOOKS = {
 
 const GENERAL_ROLE_ID = "1521379287754604594";
 const PRIORITY_ROLE_ID = "1521378897759961110";
+const FEEDBACK_COOLDOWN_MS = 60 * 1000;
+const FEEDBACK_MAX_PER_HOUR = 5;
+const FEEDBACK_HISTORY_KEY = "kingLegacyFeedbackHistory";
 
 const FEEDBACK_TYPE_INFO = {
   bug: {
@@ -704,6 +707,51 @@ function updateFeedbackTypeDescription() {
   els.feedbackTypeDescription.textContent = FEEDBACK_TYPE_INFO[type]?.description || "";
 }
 
+function getFeedbackHistory() {
+  const now = Date.now();
+
+  try {
+    const history = JSON.parse(localStorage.getItem(FEEDBACK_HISTORY_KEY) || "[]");
+    return history
+      .filter(time => Number.isFinite(Number(time)))
+      .map(Number)
+      .filter(time => now - time < 60 * 60 * 1000)
+      .sort((a, b) => a - b);
+  } catch (error) {
+    localStorage.removeItem(FEEDBACK_HISTORY_KEY);
+    return [];
+  }
+}
+
+function saveFeedbackHistory(history) {
+  localStorage.setItem(FEEDBACK_HISTORY_KEY, JSON.stringify(history));
+}
+
+function canSubmitFeedback() {
+  const now = Date.now();
+  const history = getFeedbackHistory();
+  saveFeedbackHistory(history);
+
+  const lastSubmit = history[history.length - 1] || 0;
+
+  if (now - lastSubmit < FEEDBACK_COOLDOWN_MS) {
+    const secondsLeft = Math.ceil((FEEDBACK_COOLDOWN_MS - (now - lastSubmit)) / 1000);
+    return { ok: false, message: `Please wait ${secondsLeft}s before sending feedback again.` };
+  }
+
+  if (history.length >= FEEDBACK_MAX_PER_HOUR) {
+    return { ok: false, message: "You can only send 5 feedback messages per hour." };
+  }
+
+  return { ok: true };
+}
+
+function recordFeedbackSubmit() {
+  const history = getFeedbackHistory();
+  history.push(Date.now());
+  saveFeedbackHistory(history);
+}
+
 function countFeedbackWords() {
   return els.feedbackMessage.value.trim().split(/\s+/).filter(Boolean).length;
 }
@@ -745,6 +793,13 @@ async function submitFeedback() {
     return;
   }
 
+  const rateLimit = canSubmitFeedback();
+
+  if (!rateLimit.ok) {
+    setFeedbackStatus(rateLimit.message, "error");
+    return;
+  }
+
   els.feedbackSubmitBtn.disabled = true;
   els.feedbackSubmitBtn.textContent = "Sending...";
   setFeedbackStatus("Sending feedback...", "");
@@ -778,6 +833,7 @@ async function submitFeedback() {
 
     if (!response.ok) throw new Error("Discord rejected the message.");
 
+    recordFeedbackSubmit();
     els.feedbackMessage.value = "";
     updateFeedbackWordCount();
     setFeedbackStatus("Feedback sent. Thank you!", "success");
