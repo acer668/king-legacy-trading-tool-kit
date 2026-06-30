@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>King Legacy Trade Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>King Legacy Trade Calculator</h1>
+      <p>Compare both sides of a trade using custom Fin values.</p>
+    </div>
+    <button id="themeBtn" type="button">Toggle Theme</button>
+  </header>
+
+  <main>
+    <section class="summary-card">
+      <div class="summary-box">
+        <span>Your Offer</span>
+        <strong id="yourTotal">0</strong>
+        <small>fins</small>
+      </div>
+      <div class="summary-box result" id="resultBox">
+        <span>Result</span>
+        <strong id="tradeResult">Even</strong>
+        <small id="differenceText">Difference: 0 fins</small>
+      </div>
+      <div class="summary-box">
+        <span>Their Offer</span>
+        <strong id="theirTotal">0</strong>
+        <small>fins</small>
+      </div>
+    </section>
+
+    <section class="trade-grid">
+      <article class="offer-panel">
+        <div class="panel-head">
+          <h2>Your Offer</h2>
+          <button class="clear-btn" data-side="your">Clear</button>
+        </div>
+        <div id="yourItems" class="selected-list empty">No items added.</div>
+      </article>
+
+      <article class="offer-panel">
+        <div class="panel-head">
+          <h2>Their Offer</h2>
+          <button class="clear-btn" data-side="their">Clear</button>
+        </div>
+        <div id="theirItems" class="selected-list empty">No items added.</div>
+      </article>
+    </section>
+
+    <section class="controls">
+      <input id="searchInput" type="search" placeholder="Search items..." />
+      <select id="categoryFilter">
+        <option value="All">All Categories</option>
+      </select>
+      <select id="sortFilter">
+        <option value="category">Sort: Category</option>
+        <option value="value-desc">Sort: Highest Value</option>
+        <option value="value-asc">Sort: Lowest Value</option>
+        <option value="name">Sort: Name</option>
+      </select>
+    </section>
+
+    <section id="itemsContainer" class="items-container"></section>
+  </main>
+
+  <template id="itemTemplate">
+    <article class="item-card">
+      <div>
+        <h3></h3>
+        <p></p>
+      </div>
+      <div class="item-actions">
+        <button class="add-your">+ Yours</button>
+        <button class="add-their">+ Theirs</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
