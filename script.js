@@ -270,6 +270,9 @@ const FEEDBACK_WEBHOOKS = {
   update: "https://discord.com/api/webhooks/1521359623913996360/wkoRGSEowhl2Lsti4lxScZZkErDC_XIjf_7eeDSYfb_DxHAGsFmG77SBmYZrYwwGFc1s"
 };
 
+const GENERAL_ROLE_ID = "1521379287754604594";
+const PRIORITY_ROLE_ID = "1521378897759961110";
+
 const FEEDBACK_TYPE_INFO = {
   bug: {
     label: "Bug Report",
@@ -752,6 +755,12 @@ async function submitFeedback() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: "King Legacy Toolkit Feedback",
+        content: (type === "bug" || type === "suggestion")
+          ? `<@&${GENERAL_ROLE_ID}> <@&${PRIORITY_ROLE_ID}>`
+          : `<@&${GENERAL_ROLE_ID}>`,
+        allowed_mentions: {
+          roles: [GENERAL_ROLE_ID, PRIORITY_ROLE_ID]
+        },
         embeds: [{
           title: `${info.emoji} ${info.label}`,
           color: info.color,
